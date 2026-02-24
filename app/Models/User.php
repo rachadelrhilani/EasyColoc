@@ -20,7 +20,7 @@ class User extends Authenticatable
     protected $fillable = [
         'nom',
         'email',
-        'mot_de_passe',
+        'password',
         'role', // owner | membre | admin
         'reputation',
         'statut', // actif | quitte
@@ -39,6 +39,15 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+    public function estAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    public function estBanni()
+    {
+        return !$this->est_actif;
+    }
 
     public function colocation()
     {

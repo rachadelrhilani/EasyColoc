@@ -9,58 +9,74 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    // affiche le formulaire d'inscription
+    public function showRegister()
+    {
+        return view('auth.register');
+    }
+   
+
     public function register(Request $request)
     {
         $request->validate([
-            'nom' => 'required|string|max:255',
-            'email' => 'required|email|unique:utilisateurs',
-            'mot_de_passe' => 'required|min:6'
+            'nom'      => 'required|string|max:255',
+            'email'    => 'required|email|unique:users,email',
+            'password' => 'required|min:6|confirmed', 
         ]);
 
-        // verifie s'il est le premier utilisateur inscrit 
         $isFirstUser = User::count() === 0;
 
         $user = User::create([
-            'nom' => $request->nom,
-            'email' => $request->email,
-            'mot_de_passe' => Hash::make($request->mot_de_passe),
-            'role' => $isFirstUser ? 'admin' : 'membre',
-            'date_adhesion' => now()
+            'nom'           => $request->nom,
+            'email'         => $request->email,
+            'password'      => Hash::make($request->password),
+            'role'          => $isFirstUser ? 'admin' : 'membre',
+            'date_adhesion' => now(),
+            'est_actif'     => true,
         ]);
 
         Auth::login($user);
 
-        return response()->json([
-            'message' => $isFirstUser
-                ? 'Inscription réussie. Vous êtes admin global.'
-                : 'Inscription réussie.',
-            'user' => $user
-        ]);
+        return redirect()->route('dashboard')->with('message', 'Compte créé avec succès !');
     }
-    
+
+    public function showLogin()
+    {
+        return view('auth.login');
+    }
+
+    // la connexion
     public function login(Request $request)
     {
-        $credentials = [
-            'email' => $request->email,
-            'password' => $request->mot_de_passe
-        ];
-
-        if (!Auth::attempt($credentials)) {
-            return response()->json(['message' => 'Identifiants invalides'], 401);
-        }
-
-        $user = Auth::user();
-
-        if (!$user->est_actif) {
-            Auth::logout();
-            return response()->json([
-                'message' => 'Votre compte a été banni.'
-            ], 403);
-        }
-
-        return response()->json([
-            'message' => 'Connexion réussie',
-            'user' => $user
+        $credentials = $request->validate([
+            'email'    => 'required|email',
+            'password' => 'required',
         ]);
+
+        if (Auth::attempt($credentials)) {
+            
+            $user = Auth::user();
+
+            if (!$user->est_actif) {
+                Auth::logout();
+                return back()->withErrors(['email' => 'Votre compte est suspendu.']);
+            }
+
+            $request->session()->regenerate();
+            return redirect()->intended('dashboard');
+        }
+
+        return back()->withErrors([
+            'email' => 'Les identifiants ne correspondent pas à nos records.',
+        ])->onlyInput('email');
+    }
+
+    // la deconnexion
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/login');
     }
 }

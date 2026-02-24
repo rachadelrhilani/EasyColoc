@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nom');
             $table->string('email')->unique();
-            $table->string('mot_de_passe');
+            $table->string('password');
 
             $table->enum('role', ['owner', 'membre', 'admin'])->default('membre');
             $table->integer('reputation')->default(0);
