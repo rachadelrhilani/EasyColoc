@@ -21,13 +21,13 @@ class User extends Authenticatable
         'nom',
         'email',
         'password',
-        'role', // owner | membre | admin
+        'role', // (owner,membre,admin)
         'reputation',
-        'statut', // actif | quitte
+        'statut', // (actif,quitte)
         'date_adhesion',
         'date_depart',
         'colocation_id',
-        'est_actif'
+        'est_actif'// (s'il est bannie ou non)
     ];
 
     /**
@@ -39,15 +39,6 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
-    public function estAdmin()
-    {
-        return $this->role === 'admin';
-    }
-
-    public function estBanni()
-    {
-        return !$this->est_actif;
-    }
 
     public function colocation()
     {
