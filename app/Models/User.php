@@ -18,9 +18,16 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'nom',
         'email',
-        'password',
+        'mot_de_passe',
+        'role', // owner | membre | admin
+        'reputation',
+        'statut', // actif | quitte
+        'date_adhesion',
+        'date_depart',
+        'colocation_id',
+        'est_actif'
     ];
 
     /**
@@ -32,6 +39,26 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function colocation()
+    {
+        return $this->belongsTo(Colocation::class);
+    }
+
+    public function depensesPayees()
+    {
+        return $this->hasMany(Depense::class, 'payeur_id');
+    }
+
+    public function paiementsEffectues()
+    {
+        return $this->hasMany(Paiement::class, 'payeur_id');
+    }
+
+    public function paiementsRecus()
+    {
+        return $this->hasMany(Paiement::class, 'receveur_id');
+    }
 
     /**
      * Get the attributes that should be cast.
