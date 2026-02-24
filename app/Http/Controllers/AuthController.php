@@ -37,4 +37,30 @@ class AuthController extends Controller
             'user' => $user
         ]);
     }
+    
+    public function login(Request $request)
+    {
+        $credentials = [
+            'email' => $request->email,
+            'password' => $request->mot_de_passe
+        ];
+
+        if (!Auth::attempt($credentials)) {
+            return response()->json(['message' => 'Identifiants invalides'], 401);
+        }
+
+        $user = Auth::user();
+
+        if (!$user->est_actif) {
+            Auth::logout();
+            return response()->json([
+                'message' => 'Votre compte a été banni.'
+            ], 403);
+        }
+
+        return response()->json([
+            'message' => 'Connexion réussie',
+            'user' => $user
+        ]);
+    }
 }
