@@ -8,7 +8,6 @@ class OwnerController extends Controller
 {
     public function dashboard()
     {
-        // On récupère l'utilisateur avec sa colocation et TOUTES les relations liées
         $user = auth()->user()->load(['colocation.membres', 'colocation.depenses']);
         
         $colocation = $user->colocation;
@@ -19,8 +18,8 @@ class OwnerController extends Controller
 
         return view('owner.dashboard')
             ->with('colocation', $colocation)
-            ->with('membres', $colocation->membres) // Collection de membres
-            ->with('depenses', $colocation->depenses) // Collection de dépenses
+            ->with('membres', $colocation->membres) 
+            ->with('depenses', $colocation->depenses) 
             ->with('totalMontant', $colocation->depenses->sum('montant'));
     }
 }
