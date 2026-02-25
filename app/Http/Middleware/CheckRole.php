@@ -30,12 +30,9 @@ class CheckRole
         return redirect()->route('owner.dashboard')->with('error', 'Accès refusé aux pages membres.');
     }
 
-    // Si l'utilisateur est un Member mais essaie d'accéder à une page d'Owner
+    
     if ($user->role === 'member') {
         return redirect()->route('dashboard')->with('error', 'Vous devez créer une colocation pour accéder à cet espace.');
     }
-    // Par défaut, si rien ne correspond (ex: banni)
-    auth()->logout();
-    return redirect()->route('login')->with('error', 'Compte inactif ou accès non autorisé.');
     }
 }
