@@ -22,7 +22,6 @@
             @forelse($categories as $cat)
                 <div class="p-4 flex justify-between items-center hover:bg-slate-50">
                     <span class="font-medium text-slate-700">{{ $cat->nom }}</span>
-                    <span class="text-xs text-slate-400 italic">ID: #{{ $cat->id }}</span>
                 </div>
             @empty
                 <p class="p-8 text-center text-slate-400 italic">Aucune catégorie créée.</p>
