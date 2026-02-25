@@ -20,7 +20,7 @@ class ColocationController extends Controller
         $colocation = Colocation::create([
             'nom' => $request->nom,
             'description' => $request->description ?? 'Nouvelle colocation',
-            'statut' => 'actif'
+            'statut' => 'active'
         ]);
 
 
