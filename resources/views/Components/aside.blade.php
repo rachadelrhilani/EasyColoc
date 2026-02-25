@@ -1,4 +1,4 @@
-<aside class="w-64 bg-white h-screen shadow-lg flex flex-col transition-all duration-300">
+<aside class=" bg-white h-screen shadow-lg flex flex-col transition-all duration-300">
     <div class="p-6 border-b">
         <h1 class="text-2xl font-bold text-indigo-600 tracking-tight">EasyColoc</h1>
         <p class="text-xs text-slate-400 font-medium uppercase mt-1">Espace {{ Auth::user()->role }}</p>

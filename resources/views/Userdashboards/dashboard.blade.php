@@ -6,7 +6,7 @@
 @section('content')
 <div class="max-w-4xl mx-auto mt-12">
     <div class="text-center mb-12">
-        <h1 class="text-4xl font-extrabold text-slate-900 tracking-tight">Bienvenue, {{ Auth::user()->nom }} ! 👋</h1>
+        <h1 class="text-4xl font-extrabold text-slate-900 tracking-tight">Bienvenue, {{ Auth::user()->nom }} !</h1>
         <p class="text-lg text-slate-600 mt-4">Vous n'êtes pas encore membre d'une colocation. Pour commencer à gérer vos dépenses, choisissez une option :</p>
     </div>
 
