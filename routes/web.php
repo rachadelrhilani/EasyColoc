@@ -22,4 +22,6 @@ Route::middleware(['auth','role:member'])->group(function () {
 });
 Route::middleware(['auth','role:owner'])->group(function () {
    Route::get('/owner/dashboard', [OwnerController::class, 'dashboard'])->name('owner.dashboard');
+   Route::get('/categories', [OwnerController::class, 'indexCategories'])->name('categories.index');
+   Route::post('/categories', [OwnerController::class, 'storeCategorie'])->name('categories.store');
 });

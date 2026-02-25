@@ -9,7 +9,7 @@ class OwnerController extends Controller
     public function dashboard()
     {
         $user = auth()->user()->load(['colocation.membres', 'colocation.depenses']);
-        
+
         $colocation = $user->colocation;
 
         if (!$colocation) {
@@ -18,8 +18,36 @@ class OwnerController extends Controller
 
         return view('owner.dashboard')
             ->with('colocation', $colocation)
-            ->with('membres', $colocation->membres) 
-            ->with('depenses', $colocation->depenses) 
+            ->with('membres', $colocation->membres)
+            ->with('depenses', $colocation->depenses)
             ->with('totalMontant', $colocation->depenses->sum('montant'));
+    }
+
+    public function indexCategories()
+    {
+        $user = auth()->user()->load(['colocation.categories']);
+
+        $categories = $user->colocation->categories;
+
+        return view('owner.categories', compact('categories'));
+    }
+
+    public function storeCategorie(Request $request)
+    {
+        $request->validate([
+            'nom' => 'required|string|max:50',
+        ]);
+
+        $colocation = auth()->user()->colocation;
+
+        if (!$colocation) {
+            return back()->with('error', 'Vous devez appartenir à une colocation.');
+        }
+
+        $colocation->categories()->create([
+            'nom' => $request->nom
+        ]);
+
+        return back()->with('message', 'Catégorie ajoutée avec succès !');
     }
 }
