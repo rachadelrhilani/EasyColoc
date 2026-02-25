@@ -33,6 +33,6 @@ class ColocationController extends Controller
             'role' => 'owner'
         ]);
 
-        return redirect()->route('dashboard')->with('message', 'Colocation créée ! Vous êtes maintenant l\'administrateur.');
+        return redirect()->route('owner.dashboard')->with('message', 'Colocation cree avec succes !');
     }
 }
