@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class MemberController extends Controller
@@ -10,7 +11,6 @@ class MemberController extends Controller
 {
     $user = auth()->user();
 
-    // Si l'utilisateur a une colocation, on affiche le "vrai" dashboard
     if ($user->colocation_id !== null) {
         // On récupère les infos de la coloc et des membres
         $colocation = $user->colocation;

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ColocationController;
 use App\Http\Controllers\InvitationController;
+use App\Http\Controllers\MemberController;
 use App\Http\Controllers\OwnerController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,18 +20,18 @@ Route::post('/register', [AuthController::class, 'register'])->name('register');
 
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-   Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/invitation/reponse/{token}', [InvitationController::class, 'showReponse'])
-        ->name('invitation.reponse')
-        ->middleware('signed'); // Middleware crucial pour la sécurité Gmail
-    // reponse de user
-    Route::post('/invitation/decider', [InvitationController::class, 'decider'])
-        ->name('invitation.decider');
 });
 
 
 Route::middleware(['auth','role:member'])->group(function () {
+    Route::get('/dashboard', [MemberController::class, 'index'])->name('dashboard');
     Route::post('/colocation/create', [ColocationController::class, 'store'])->name('colocation.store');
+     Route::get('/invitation/reponse/{token}', [InvitationController::class, 'showReponse'])
+        ->name('invitation.reponse')
+; // Middleware crucial pour la sécurité Gmail
+    // reponse de user
+    Route::post('/invitation/decider', [InvitationController::class, 'decider'])
+        ->name('invitation.decider');
 });
 
 

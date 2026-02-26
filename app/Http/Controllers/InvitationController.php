@@ -13,7 +13,7 @@ class InvitationController extends Controller
 {
     public function envoyer(Request $request)
     {
-        // Validation de la requête
+        // validation de la requête
         $request->validate([
             'user_id' => 'required|exists:users,id',
         ]);
@@ -21,7 +21,7 @@ class InvitationController extends Controller
         $userAInviter = User::findOrFail($request->user_id);
         $owner = auth()->user();
 
-        // Verifier si l'utilisateur a deje une colocation
+        // verifier si l'utilisateur a deje une colocation
         if ($userAInviter->colocation_id !== null) {
             return back()->with('error', 'Cet utilisateur appartient déjà à une colocation.');
         }
@@ -47,7 +47,7 @@ class InvitationController extends Controller
         ]);
 
         
-        // Note : On passe le token dans l'URL pour la retrouver facilement
+        // genere Url
         $urlAction = URL::temporarySignedRoute(
             'invitation.reponse', 
             now()->addDays(7), 
@@ -79,11 +79,11 @@ class InvitationController extends Controller
         }
 
         // verifier si l'invitation est toujours en attente
-        if ($invitation->statut !== 'en attente') {
+        if ($invitation->statut !== 'en_attente') {
             return redirect()->route('login')->with('error', 'Cette invitation a déjà été traitée.');
         }
 
-        // 3. Vérifier l'expiration (sécurité supplémentaire au cas où)
+        // verifier
         if (now()->gt($invitation->date_expiration)) {
             $invitation->update(['statut' => 'expire']);
             return redirect()->route('login')->with('error', 'Cette invitation a expiré.');
@@ -114,13 +114,13 @@ class InvitationController extends Controller
                 'date_adhesion' => now()
             ]);
 
-            $invitation->update(['statut' => 'accepte']);
+            $invitation->update(['statut' => 'acceptee']);
 
             return redirect()->route('dashboard')->with('message', 'Félicitations ! Vous avez rejoint la colocation.');
         }
 
         // Si refus
-        $invitation->update(['statut' => 'refuse']);
+        $invitation->update(['statut' => 'refusee']);
         return redirect()->route('dashboard')->with('message', 'Invitation déclinée.');
     }
 }
