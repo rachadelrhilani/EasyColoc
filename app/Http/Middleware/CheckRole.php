@@ -28,11 +28,12 @@ class CheckRole
 
         if ($user->role === 'owner') {
         return redirect()->route('owner.dashboard')->with('error', 'Accès refusé aux pages membres.');
-    }
+        }
 
     
     if ($user->role === 'member') {
         return redirect()->route('dashboard')->with('error', 'Vous devez créer une colocation pour accéder à cet espace.');
     }
+    return $next($request);
     }
 }
