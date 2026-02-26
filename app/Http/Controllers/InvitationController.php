@@ -41,7 +41,7 @@ class InvitationController extends Controller
         $invitation = Invitation::create([
             'email'           => $userAInviter->email,
             'token'           => Str::random(40),
-            'statut'          => 'en attente',
+            'statut'          => 'en_attente',
             'date_expiration' => now()->addDays(7),
             'colocation_id'   => $owner->colocation_id,
         ]);

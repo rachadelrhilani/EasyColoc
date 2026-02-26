@@ -16,13 +16,13 @@ class MailService
             $mail->isSMTP();
             $mail->Host       = 'smtp.gmail.com';
             $mail->SMTPAuth   = true;
-            $mail->Username   = env('MAIL_USERNAME');
-            $mail->Password   = env('MAIL_PASSWORD'); 
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // Port 465 utilise SMTPS
+            $mail->Username   = 'rachdos76@gmail.com';
+            $mail->Password   = 'yvsnsvpnyrlslhsd'; // Ton code de 16 lettres
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // Crucial pour le port 465
             $mail->Port       = 465;
             $mail->CharSet    = 'UTF-8';
 
-            $mail->setFrom(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+            $mail->setFrom(config('mail.from.address'), config('mail.from.name'));
             $mail->addAddress($emailDestinataire);
 
             $mail->isHTML(true);
@@ -45,7 +45,7 @@ class MailService
             return true;
         } catch (Exception $e) {
             // En cas d'erreur, tu peux logger pour débugger :
-            Log::error("Erreur PHPMailer: " . $mail->ErrorInfo);
+            dd($mail->ErrorInfo, $e->getMessage());
             return false;
         }
     }
