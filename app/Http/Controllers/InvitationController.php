@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Services\MailService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
 
 class InvitationController extends Controller
 {
@@ -20,8 +21,7 @@ class InvitationController extends Controller
         $userAInviter = User::findOrFail($request->user_id);
         $owner = auth()->user();
 
-        // --- SÉCURITÉ ---
-        // 1. Vérifier si l'utilisateur a déjà une colocation
+        // Verifier si l'utilisateur a deje une colocation
         if ($userAInviter->colocation_id !== null) {
             return back()->with('error', 'Cet utilisateur appartient déjà à une colocation.');
         }
@@ -47,7 +47,7 @@ class InvitationController extends Controller
             'colocation_id'   => $owner->colocation_id,
         ]);
 
-        // 2. Génération de l'URL signée (expire dans 7 jours)
+        
         // Note : On passe le token dans l'URL pour la retrouver facilement
         $urlAction = URL::temporarySignedRoute(
             'invitation.reponse', 
@@ -55,7 +55,7 @@ class InvitationController extends Controller
             ['token' => $invitation->token]
         );
 
-        // 3. Envoi via PHPMailer (ton Service)
+        // envoye l'invitation
         $envoi = MailService::envoyerInvitation(
             $invitation->email, 
             $urlAction, 
@@ -79,7 +79,7 @@ class InvitationController extends Controller
             abort(404, "Invitation introuvable.");
         }
 
-        // 2. Vérifier si l'invitation est toujours en attente
+        // verifier si l'invitation est toujours en attente
         if ($invitation->statut !== 'en attente') {
             return redirect()->route('login')->with('error', 'Cette invitation a déjà été traitée.');
         }
@@ -93,9 +93,6 @@ class InvitationController extends Controller
         return view('invitations.reponse', compact('invitation'));
     }
 
-    /**
-     * Traite l'acceptation ou le refus
-     */
     public function decider(Request $request)
     {
         $request->validate([
@@ -104,15 +101,14 @@ class InvitationController extends Controller
         ]);
 
         $invitation = Invitation::where('token', $request->token)->firstOrFail();
-        $user = Auth::user();
+        $user = auth()->user();
 
-        // Sécurité : Vérifier que l'email de l'invitation correspond à l'utilisateur connecté
+        // Vérifier que l'email de l'invitation correspond à l'utilisateur connecté
         if ($user->email !== $invitation->email) {
             return redirect()->route('dashboard')->with('error', 'Cette invitation ne vous est pas destinée.');
         }
 
         if ($request->choix === 'accepter') {
-            // Mise à jour de l'utilisateur : il rejoint la coloc et change de rôle
             $user->update([
                 'colocation_id' => $invitation->colocation_id,
                 'role'          => 'membre',
