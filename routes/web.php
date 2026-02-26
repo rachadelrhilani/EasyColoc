@@ -19,7 +19,7 @@ Route::post('/register', [AuthController::class, 'register'])->name('register');
 
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
+   Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/invitation/reponse/{token}', [InvitationController::class, 'showReponse'])
         ->name('invitation.reponse')
         ->middleware('signed'); // Middleware crucial pour la sécurité Gmail
@@ -30,7 +30,6 @@ Route::middleware('auth')->group(function () {
 
 
 Route::middleware(['auth','role:member'])->group(function () {
-    Route::get('/dashboard', function () { return view('Userdashboards.dashboard'); })->name('dashboard');
     Route::post('/colocation/create', [ColocationController::class, 'store'])->name('colocation.store');
 });
 
