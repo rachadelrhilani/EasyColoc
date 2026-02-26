@@ -52,6 +52,8 @@ class OwnerController extends Controller
 
         return back()->with('message', 'Catégorie ajoutée avec succès !');
     }
+
+    // recuperer les membres et recherche les membres
     public function membres(Request $request)
     {
         $user = auth()->user()->load('colocation.membres');
