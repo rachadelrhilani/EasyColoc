@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Log;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -16,7 +17,7 @@ class MailService
             $mail->Host       = 'smtp.gmail.com';
             $mail->SMTPAuth   = true;
             $mail->Username   = env('MAIL_USERNAME');
-            $mail->Password   = env('MAIL_PASSWORD'); // Le mot de passe d'application
+            $mail->Password   = env('MAIL_PASSWORD'); 
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // Port 465 utilise SMTPS
             $mail->Port       = 465;
             $mail->CharSet    = 'UTF-8';
