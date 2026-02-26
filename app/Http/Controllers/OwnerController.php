@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class OwnerController extends Controller
 {
+    // dashboard
     public function dashboard()
     {
         $user = auth()->user()->load(['colocation.membres', 'colocation.depenses']);
@@ -22,7 +24,7 @@ class OwnerController extends Controller
             ->with('depenses', $colocation->depenses)
             ->with('totalMontant', $colocation->depenses->sum('montant'));
     }
-
+    // affiche categories
     public function indexCategories()
     {
         $user = auth()->user()->load(['colocation.categories']);
@@ -31,7 +33,7 @@ class OwnerController extends Controller
 
         return view('owner.categories', compact('categories'));
     }
-
+    // ajouter categories
     public function storeCategorie(Request $request)
     {
         $request->validate([
@@ -49,5 +51,24 @@ class OwnerController extends Controller
         ]);
 
         return back()->with('message', 'Catégorie ajoutée avec succès !');
+    }
+    public function membres(Request $request)
+    {
+        $user = auth()->user()->load('colocation.membres');
+        $search = $request->get('search');
+
+        $membresActuels = $user->colocation->membres;
+
+        $utilisateursDisponibles = collect();
+        if ($search) {
+            $utilisateursDisponibles = User::where('colocation_id', null)
+                ->where('role', '!=', 'admin')
+                ->where('nom', 'LIKE', "%{$search}%")
+                ->where('id', '!=', auth()->id())
+                ->limit(5)
+                ->get();
+        }
+
+        return view('owner.membres', compact('membresActuels', 'utilisateursDisponibles'));
     }
 }
