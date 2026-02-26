@@ -26,7 +26,7 @@ class InvitationController extends Controller
             return back()->with('error', 'Cet utilisateur appartient déjà à une colocation.');
         }
 
-        // 2. Vérifier si une invitation est déjà en attente pour cet email
+        // verifier si une invitation est déjà en attente pour cet email
         $dejaInvite = Invitation::where('email', $userAInviter->email)
             ->where('statut', 'en attente')
             ->where('date_expiration', '>', now())
@@ -36,9 +36,8 @@ class InvitationController extends Controller
             return back()->with('error', 'Une invitation est déjà en cours pour cet utilisateur.');
         }
 
-        // --- LOGIQUE D'INVITATION ---
 
-        // 1. Création de l'invitation en DB
+        // creation de l'invitation en DB
         $invitation = Invitation::create([
             'email'           => $userAInviter->email,
             'token'           => Str::random(40),
@@ -103,7 +102,7 @@ class InvitationController extends Controller
         $invitation = Invitation::where('token', $request->token)->firstOrFail();
         $user = auth()->user();
 
-        // Vérifier que l'email de l'invitation correspond à l'utilisateur connecté
+        // verifier que l'email de l'invitation d'un user connecte
         if ($user->email !== $invitation->email) {
             return redirect()->route('dashboard')->with('error', 'Cette invitation ne vous est pas destinée.');
         }
