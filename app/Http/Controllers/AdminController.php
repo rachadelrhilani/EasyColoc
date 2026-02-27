@@ -22,4 +22,10 @@ class AdminController extends Controller
 
         return view('admin.dashboard', compact('stats', 'users'));
     }
+    public function toggleBan(User $user)
+    {
+        $user->update(['est_actif' => !$user->est_actif]);
+
+        return back()->with('message', $user->est_actif ? 'Utilisateur réactivé.' : 'Utilisateur banni.');
+    }
 }
