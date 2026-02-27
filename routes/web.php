@@ -6,6 +6,7 @@ use App\Http\Controllers\DepenseController;
 use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\OwnerController;
+use App\Http\Controllers\PaiementController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -23,6 +24,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/finances', [DepenseController::class, 'index'])->name('depenses.index');
     Route::post('/finances', [DepenseController::class, 'store'])->name('depenses.store');
+    Route::get('/finances/balances', [DepenseController::class, 'balances'])->name('finances.balances');
+    Route::post('/paiements/valider', [PaiementController::class, 'valider'])->name('paiements.valider');
 });
 
 
@@ -39,7 +42,6 @@ Route::middleware(['auth','role:member'])->group(function () {
 
 Route::middleware(['auth','role:owner'])->group(function () {
    Route::get('/owner/dashboard', [OwnerController::class, 'dashboard'])->name('owner.dashboard');
-   //membres
    Route::get('/owner/membres', [OwnerController::class, 'membres'])->name('owner.membres');
    Route::post('/owner/inviter', [InvitationController::class, 'envoyer'])->name('owner.inviter');
 
