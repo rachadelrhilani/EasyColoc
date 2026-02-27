@@ -9,16 +9,16 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
-    public function index()
+    public function statsdashboard()
     {
         $stats = [
-            'users_count' => User::count(),
+            'users_count' => User::where("role","membre")->count(),
             'colocs_count' => Colocation::count(),
             'total_money' => Depense::sum('montant'),
             'banned_count' => User::where('est_actif', false)->count(),
         ];
 
-        $users = User::with('colocation')->latest()->paginate(10);
+        $users = User::with('colocation')->where("role","membre")->latest()->paginate(10);
 
         return view('admin.dashboard', compact('stats', 'users'));
     }

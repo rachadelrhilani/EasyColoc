@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ColocationController;
 use App\Http\Controllers\DepenseController;
@@ -50,7 +51,7 @@ Route::middleware(['auth','role:owner'])->group(function () {
 });
 
 
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
-    Route::post('/users/{user}/ban', [AdminController::class, 'toggleBan'])->name('users.ban');
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'statsdashboard'])->name('dashboard');
+    Route::post('/users/{user}/ban', [AdminController::class, 'toggleBan'])->name('admin.users.ban');
 });
