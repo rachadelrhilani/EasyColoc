@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ColocationController;
+use App\Http\Controllers\DepenseController;
 use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\OwnerController;
@@ -20,6 +21,8 @@ Route::post('/register', [AuthController::class, 'register'])->name('register');
 
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/finances', [DepenseController::class, 'index'])->name('depenses.index');
+    Route::post('/finances', [DepenseController::class, 'store'])->name('depenses.store');
 });
 
 
@@ -27,9 +30,7 @@ Route::middleware(['auth','role:member'])->group(function () {
     Route::get('/dashboard', [MemberController::class, 'index'])->name('dashboard');
     Route::post('/colocation/create', [ColocationController::class, 'store'])->name('colocation.store');
      Route::get('/invitation/reponse/{token}', [InvitationController::class, 'showReponse'])
-        ->name('invitation.reponse')
-; // Middleware crucial pour la sécurité Gmail
-    // reponse de user
+        ->name('invitation.reponse'); 
     Route::post('/invitation/decider', [InvitationController::class, 'decider'])
         ->name('invitation.decider');
 });

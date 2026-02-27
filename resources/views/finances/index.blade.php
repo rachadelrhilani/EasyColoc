@@ -1,94 +1,113 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="space-y-8">
-    
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-        <h2 class="text-xl font-bold mb-6 flex items-center text-slate-800">
-            <span class="p-2 bg-emerald-100 text-emerald-600 rounded-lg mr-3">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-            </span>
-            Nouvelle dépense
-        </h2>
+<div class="p-6 lg:p-10 bg-slate-50 min-h-screen">
+    <div class="max-w-6xl mx-auto">
         
-        <form action="{{ route('depenses.store') }}" method="POST" class="grid grid-cols-1 md:grid-cols-5 gap-4">
-            @csrf
-            <div class="md:col-span-2">
-                <input type="text" name="titre" placeholder="Qu'avez-vous acheté ?" required
-                    class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-slate-800">Gestion des Finances</h1>
+            <div class="text-sm font-medium text-slate-500 bg-white px-4 py-2 rounded-lg shadow-sm">
+                Colocation : <span class="text-indigo-600">{{ $colocation->nom }}</span>
             </div>
-            <div>
-                <input type="number" step="0.01" name="montant" placeholder="Montant (€)" required
-                    class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none">
-            </div>
-            <div>
-                <select name="categorie_id" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none">
-                    @foreach($categories as $cat)
-                        <option value="{{ $cat->id }}">{{ $cat->nom }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <button type="submit" class="bg-emerald-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-emerald-700 transition shadow-lg shadow-emerald-100">
-                Ajouter
-            </button>
-            <div class="md:col-span-1">
-                <input type="date" name="date_depense" value="{{ date('Y-m-d') }}" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm">
-            </div>
-        </form>
-    </div>
-
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <div class="p-6 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
-            <h3 class="font-bold text-slate-800 tracking-tight">Historique des dépenses</h3>
-            <form action="{{ route('depenses.index') }}" method="GET" class="flex gap-2">
-                <select name="mois" onchange="this.form.submit()" class="text-sm rounded-lg border-slate-200">
-                    @foreach(range(1, 12) as $m)
-                        <option value="{{ $m }}" {{ request('mois', date('m')) == $m ? 'selected' : '' }}>{{ date('F', mktime(0, 0, 0, $m, 1)) }}</option>
-                    @endforeach
-                </select>
-            </form>
         </div>
 
-        <div class="overflow-x-auto">
-            <table class="w-full text-left">
-                <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-bold">
-                    <tr>
-                        <th class="px-6 py-4">Date</th>
-                        <th class="px-6 py-4">Titre / Catégorie</th>
-                        <th class="px-6 py-4">Payé par</th>
-                        <th class="px-6 py-4 text-right">Montant</th>
-                        <th class="px-6 py-4 text-right">Part / Pers.</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100">
-                    @php $nbMembres = $colocation->membres->count(); @endphp
-                    @forelse($depenses as $depense)
-                    <tr class="hover:bg-slate-50/80 transition">
-                        <td class="px-6 py-4 text-sm text-slate-500">{{ \Carbon\Carbon::parse($depense->date_depense)->format('d/m/Y') }}</td>
-                        <td class="px-6 py-4">
-                            <p class="font-semibold text-slate-800">{{ $depense->titre }}</p>
-                            <span class="text-[10px] px-2 py-0.5 bg-slate-100 text-slate-500 rounded-full uppercase">{{ $depense->categorie->nom }}</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center space-x-2">
-                                <span class="w-6 h-6 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-[10px] font-bold">
-                                    {{ substr($depense->user->nom, 0, 1) }}
-                                </span>
-                                <span class="text-sm text-slate-600">{{ $depense->user->nom }}</span>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 text-right font-bold text-slate-900">{{ number_format($depense->montant, 2) }} €</td>
-                        <td class="px-6 py-4 text-right text-xs text-slate-400">
-                             {{ number_format($depense->montant / max($nbMembres, 1), 2) }} €
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="5" class="px-6 py-12 text-center text-slate-400 italic">Aucune dépense trouvée pour ce mois.</td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <div class="lg:col-span-1">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 sticky top-10">
+                    <h2 class="text-xl font-bold text-slate-800 mb-6">Ajouter une dépense</h2>
+                    
+                    <form action="{{ route('depenses.store') }}" method="POST" class="space-y-4">
+                        @csrf
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Titre</label>
+                            <input type="text" name="titre" placeholder="ex: Courses Intermarché" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" required>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Montant (€)</label>
+                            <input type="number" step="0.01" name="montant" placeholder="0.00" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" required>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Catégorie</label>
+                            <select name="categorie_id" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" required>
+                                <option value="">Choisir une catégorie</option>
+                                @foreach($categories as $cat)
+                                    <option value="{{ $cat->id }}">{{ $cat->nom }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Date</label>
+                            <input type="date" name="date_depense" value="{{ date('Y-m-d') }}" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" required>
+                        </div>
+
+                        <button type="submit" class="w-full bg-indigo-600 text-white p-4 rounded-xl font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-100 transition">
+                            Enregistrer la dépense
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="lg:col-span-2 space-y-6">
+                
+                <form action="{{ route('depenses.index') }}" method="GET" class="flex gap-4 bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+                    <select name="mois" class="bg-slate-50 border-none rounded-lg text-sm font-bold p-2">
+                        @for($i=1; $i<=12; $i++)
+                            <option value="{{ sprintf('%02d', $i) }}" {{ request('mois', date('m')) == $i ? 'selected' : '' }}>
+                                {{ strftime('%B', mktime(0, 0, 0, $i, 10)) }}
+                            </option>
+                        @endfor
+                    </select>
+                    <select name="annee" class="bg-slate-50 border-none rounded-lg text-sm font-bold p-2">
+                        @for($y=date('Y'); $y>=date('Y')-2; $y--)
+                            <option value="{{ $y }}" {{ request('annee', date('Y')) == $y ? 'selected' : '' }}>{{ $y }}</option>
+                        @endfor
+                    </select>
+                    <button type="submit" class="bg-slate-800 text-white px-4 py-2 rounded-lg text-sm font-bold">Filtrer</button>
+                </form>
+
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-slate-50 border-b border-slate-100">
+                            <tr>
+                                <th class="p-4 text-xs font-bold text-slate-400 uppercase">Détails</th>
+                                <th class="p-4 text-xs font-bold text-slate-400 uppercase">Catégorie</th>
+                                <th class="p-4 text-xs font-bold text-slate-400 uppercase">Payé par</th>
+                                <th class="p-4 text-xs font-bold text-slate-400 uppercase text-right">Montant</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-50">
+                            @forelse($depenses as $depense)
+                                <tr class="hover:bg-slate-50/50 transition">
+                                    <td class="p-4">
+                                        <p class="font-bold text-slate-700">{{ $depense->titre }}</p>
+                                        <p class="text-xs text-slate-400">{{ \Carbon\Carbon::parse($depense->date_depense)->format('d/m/Y') }}</p>
+                                    </td>
+                                    <td class="p-4 text-sm">
+                                        <span class="px-2 py-1 bg-indigo-50 text-indigo-600 rounded-md text-xs font-bold">{{ $depense->categorie->nom }}</span>
+                                    </td>
+                                    <td class="p-4 text-sm text-slate-600 font-medium">
+                                        {{ $depense->payeur->nom }}
+                                    </td>
+                                    <td class="p-4 text-right font-black text-slate-800">
+                                        {{ number_format($depense->montant, 2) }} €
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="p-10 text-center text-slate-400 italic">
+                                        Aucune dépense enregistrée pour cette période.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
         </div>
     </div>
 </div>

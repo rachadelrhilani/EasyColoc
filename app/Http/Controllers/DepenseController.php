@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DepenseController extends Controller
 {
@@ -12,11 +13,11 @@ class DepenseController extends Controller
         $mois = $request->get('mois', date('m'));
         $annee = $request->get('annee', date('Y'));
 
-        $user = auth()->user()->load(['colocation.categories', 'colocation.depenses' => function($query) use ($mois, $annee) {
+        $user = auth()->user()->load(['colocation.categories', 'colocation.depenses' => function ($query) use ($mois, $annee) {
             $query->whereMonth('date_depense', $mois)
-                  ->whereYear('date_depense', $annee)
-                  ->with(['categorie', 'user']) // Évite le N+1 sur les noms de catégories et payeurs
-                  ->latest();
+                ->whereYear('date_depense', $annee)
+                ->with(['categorie', 'payeur']) // Évite le N+1 sur les noms de catégories et payeurs
+                ->latest();
         }]);
 
         return view('finances.index', [
@@ -34,17 +35,37 @@ class DepenseController extends Controller
             'date_depense' => 'required|date',
             'categorie_id' => 'required|exists:categories,id',
         ]);
-        $collocation = auth()->user()->colocation;
 
-        // creer une depense
-        $collocation->depenses()->create([
-            'titre' => $validated['titre'],
-            'montant' => $validated['montant'],
-            'date_depense' => $validated['date_depense'],
-            'categorie_id' => $validated['categorie_id'],
-            'payeur_id' => auth()->id(), 
-        ]);
+        $userPayeur = auth()->user();
+        $collocation = $userPayeur->colocation;
+        $membres = $collocation->membres;
+        $nombreMembres = $membres->count();
 
-        return back()->with('message', 'Dépense ajoutée ! Elle a été divisée entre tous les membres.');
+        if ($nombreMembres === 0) {
+            return back()->with('error', 'Impossible d\'ajouter une dépense sans membres.');
+        }
+
+        $partIndividuelle = $validated['montant'] / $nombreMembres;
+
+        
+        DB::transaction(function () use ($validated, $collocation, $userPayeur, $membres, $partIndividuelle) {
+
+            $collocation->depenses()->create([
+                'titre' => $validated['titre'],
+                'montant' => $validated['montant'],
+                'date_depense' => $validated['date_depense'],
+                'categorie_id' => $validated['categorie_id'],
+                'payeur_id' => $userPayeur->id,
+            ]);
+            foreach ($membres as $membre) {
+                if ($membre->id === $userPayeur->id) {
+                    $membre->increment('solde', $validated['montant'] - $partIndividuelle);
+                } else {
+                    $membre->decrement('solde', $partIndividuelle);
+                }
+            }
+        });
+
+        return back()->with('message', 'Dépense ajoutée ! Les soldes ont été mis à jour.');
     }
 }
