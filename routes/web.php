@@ -8,6 +8,7 @@ use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\OwnerController;
 use App\Http\Controllers\PaiementController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -27,6 +28,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/finances', [DepenseController::class, 'store'])->name('depenses.store');
     Route::get('/finances/balances', [DepenseController::class, 'balances'])->name('finances.balances');
     Route::post('/paiements/valider', [PaiementController::class, 'valider'])->name('paiements.valider');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
 
 
