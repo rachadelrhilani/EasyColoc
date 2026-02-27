@@ -48,3 +48,9 @@ Route::middleware(['auth','role:owner'])->group(function () {
    Route::get('/categories', [OwnerController::class, 'indexCategories'])->name('categories.index');
    Route::post('/categories', [OwnerController::class, 'storeCategorie'])->name('categories.store');
 });
+
+
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+    Route::post('/users/{user}/ban', [AdminController::class, 'toggleBan'])->name('users.ban');
+});
