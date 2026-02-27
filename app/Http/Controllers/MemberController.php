@@ -16,7 +16,7 @@ class MemberController extends Controller
         $colocation = $user->colocation;
         $colocataires = User::where('colocation_id', $user->colocation_id)->get();
         
-        return view('Userdashboards.dashboard_active', compact('colocation', 'colocataires'));
+        return view('Userdashboards.dashboard_active', compact('colocation', 'colocataires','user'));
     }
 
     return view('Userdashboards.dashboard_empty');

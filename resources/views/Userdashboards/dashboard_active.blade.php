@@ -26,18 +26,12 @@
             <p class="text-2xl font-black text-slate-900">{{ $colocataires->count() }} membres</p>
         </div>
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <p class="text-slate-500 text-sm font-medium uppercase">Dépenses du mois</p>
-            <p class="text-2xl font-black text-slate-900">0.00 €</p>
+            <p class="text-slate-500 text-sm font-medium uppercase">Votre Solde</p>
+            <p class="text-2xl font-black text-slate-900">{{$user->solde}} €</p>
         </div>
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <span class="text-2xl mb-2 block">📅</span>
-            <p class="text-slate-500 text-sm font-medium uppercase">Prochaine Tâche</p>
-            <p class="text-2xl font-black text-orange-500">Ménage Salon</p>
-        </div>
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <span class="text-2xl mb-2 block">📢</span>
-            <p class="text-slate-500 text-sm font-medium uppercase">Annonces</p>
-            <p class="text-2xl font-black text-indigo-600">1 nouvelle</p>
+            <p class="text-slate-500 text-sm font-medium uppercase">Reputation</p>
+            <p class="text-2xl font-black text-orange-500">{{$user->reputation}}</p>
         </div>
     </div>
 

@@ -9,14 +9,14 @@ class DepenseController extends Controller
 {
     public function index(Request $request)
     {
-        // On récupère le mois et l'année pour le filtre (par défaut actuel)
+        // recupere les values de l'input
         $mois = $request->get('mois', date('m'));
         $annee = $request->get('annee', date('Y'));
 
         $user = auth()->user()->load(['colocation.categories', 'colocation.depenses' => function ($query) use ($mois, $annee) {
             $query->whereMonth('date_depense', $mois)
                 ->whereYear('date_depense', $annee)
-                ->with(['categorie', 'payeur']) // Évite le N+1 sur les noms de catégories et payeurs
+                ->with(['categorie', 'payeur'])
                 ->latest();
         }]);
 
@@ -47,7 +47,7 @@ class DepenseController extends Controller
 
         $partIndividuelle = $validated['montant'] / $nombreMembres;
 
-        
+
         DB::transaction(function () use ($validated, $collocation, $userPayeur, $membres, $partIndividuelle) {
 
             $collocation->depenses()->create([
@@ -67,5 +67,38 @@ class DepenseController extends Controller
         });
 
         return back()->with('message', 'Dépense ajoutée ! Les soldes ont été mis à jour.');
+    }
+    public function balances()
+    {
+        $user = auth()->user();
+        $colocation = $user->colocation->load('membres');
+
+        $debiteurs = $colocation->membres->where('solde', '<', 0)->sortBy('solde');
+        $crediteurs = $colocation->membres->where('solde', '>', 0)->sortByDesc('solde');
+
+        $suggestions = [];
+
+        // calcule de remboursement
+        foreach ($debiteurs as $debiteur) {
+            $montantDu = abs($debiteur->solde);
+
+            foreach ($crediteurs as $crediteur) {
+                if ($montantDu <= 0) break;
+                if ($crediteur->solde <= 0) continue;
+
+                $montantAPayer = min($montantDu, $crediteur->solde);
+
+                $suggestions[] = [
+                    'de' => $debiteur,
+                    'a' => $crediteur,
+                    'montant' => $montantAPayer
+                ];
+
+                $montantDu -= $montantAPayer;
+                $crediteur->solde -= $montantAPayer; 
+            }
+        }
+
+        return view('finances.balances', compact('colocation', 'suggestions'));
     }
 }

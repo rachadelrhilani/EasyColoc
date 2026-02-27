@@ -28,7 +28,7 @@ class InvitationController extends Controller
 
         // verifier si une invitation est déjà en attente pour cet email
         $dejaInvite = Invitation::where('email', $userAInviter->email)
-            ->where('statut', 'en attente')
+            ->where('statut', 'en_attente')
             ->where('date_expiration', '>', now())
             ->first();
 
