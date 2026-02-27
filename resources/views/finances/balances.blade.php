@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="p-6 lg:p-10 bg-slate-50 min-h-screen">
-    <h2 class="text-3xl font-bold text-slate-800 mb-8">Équilibre des comptes ⚖️</h2>
+    <h2 class="text-3xl font-bold text-slate-800 mb-8">Équilibre des comptes</h2>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         
@@ -41,7 +41,6 @@
                         <div class="mt-3 sm:mt-0 flex items-center space-x-4">
                             <span class="text-xl font-black text-slate-800">{{ number_format($s['montant'], 2) }} €</span>
                             
-                            {{-- Bouton pour valider le remboursement --}}
                             <form action="{{ route('paiements.valider') }}" method="POST">
                                 @csrf
                                 <input type="hidden" name="payeur_id" value="{{ $s['de']->id }}">
