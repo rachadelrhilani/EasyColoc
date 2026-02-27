@@ -41,14 +41,18 @@ class DepenseController extends Controller
         $membres = $collocation->membres;
         $nombreMembres = $membres->count();
 
-        if ($nombreMembres === 0) {
+        // exclus le membre qui a depense
+        $autresMembres = $membres->where('id', '!==', $userPayeur->id);
+        $nombreAutres = $autresMembres->count();
+
+        if ($nombreAutres === 0) {
             return back()->with('error', 'Impossible d\'ajouter une dépense sans membres.');
         }
 
-        $partIndividuelle = $validated['montant'] / $nombreMembres;
+        $partIndividuelle = $validated['montant'] / $nombreAutres;
 
 
-        DB::transaction(function () use ($validated, $collocation, $userPayeur, $membres, $partIndividuelle) {
+        DB::transaction(function () use ($validated, $collocation, $userPayeur, $autresMembres, $partIndividuelle) {
 
             $collocation->depenses()->create([
                 'titre' => $validated['titre'],
@@ -57,12 +61,10 @@ class DepenseController extends Controller
                 'categorie_id' => $validated['categorie_id'],
                 'payeur_id' => $userPayeur->id,
             ]);
-            foreach ($membres as $membre) {
-                if ($membre->id === $userPayeur->id) {
-                    $membre->increment('solde', $validated['montant'] - $partIndividuelle);
-                } else {
-                    $membre->decrement('solde', $partIndividuelle);
-                }
+            $userPayeur->increment('solde', $validated['montant']);
+
+            foreach ($autresMembres as $membre) {
+                $membre->decrement('solde', $partIndividuelle);
             }
         });
 
@@ -95,7 +97,7 @@ class DepenseController extends Controller
                 ];
 
                 $montantDu -= $montantAPayer;
-                $crediteur->solde -= $montantAPayer; 
+                $crediteur->solde -= $montantAPayer;
             }
         }
 
