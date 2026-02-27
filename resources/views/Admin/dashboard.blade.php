@@ -45,13 +45,13 @@
                     <td class="p-4 text-slate-600">{{ $user->colocation->nom ?? 'Aucune' }}</td>
                     <td class="p-4">
                         @if($user->est_actif)
-                            <span class="text-emerald-600 font-bold text-sm">✓ Actif</span>
+                            <span class="text-emerald-600 font-bold text-sm">Actif</span>
                         @else
-                            <span class="text-red-600 font-bold text-sm">⚠ Banni</span>
+                            <span class="text-red-600 font-bold text-sm">Banni</span>
                         @endif
                     </td>
                     <td class="p-4 text-right">
-                        <form action="{{ route('admin.users.ban', $user) }}" method="POST">
+                        <form action="{{ route('admin.users.ban', $user->id) }}" method="POST">
                             @csrf
                             <button class="px-4 py-2 {{ $user->est_actif ? 'bg-red-50 text-red-600' : 'bg-emerald-50 text-emerald-600' }} rounded-lg text-xs font-bold hover:shadow-sm transition">
                                 {{ $user->est_actif ? 'Bannir' : 'Réactiver' }}
@@ -62,9 +62,6 @@
                 @endforeach
             </tbody>
         </table>
-        <div class="p-4 bg-slate-50">
-            {{ $users->links() }}
-        </div>
     </div>
 </div>
 @endsection

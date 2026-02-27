@@ -18,10 +18,12 @@ class AdminController extends Controller
             'banned_count' => User::where('est_actif', false)->count(),
         ];
 
-        $users = User::with('colocation')->where("role","membre")->latest()->paginate(10);
+        $users = User::with('colocation')->where("role","membre")->latest()->get();
 
         return view('admin.dashboard', compact('stats', 'users'));
     }
+
+    
     public function toggleBan(User $user)
     {
         $user->update(['est_actif' => !$user->est_actif]);

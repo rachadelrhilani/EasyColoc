@@ -25,10 +25,8 @@ class CheckRole
             return $next($request);
         }
         if ($user->role === 'admin') {
-            if (!$request->routeIs('dashboard')) {
-                return redirect()->route('dashboard')->with('error', 'Accès refusé à cette zone.');
-            }
-        }
+        return $next($request);
+    }
 
         if (in_array($user->role, $roles) && $user->est_actif) {
             return $next($request);
