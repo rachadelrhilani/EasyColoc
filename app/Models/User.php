@@ -23,7 +23,7 @@ class User extends Authenticatable
         'password',
         'role', // (owner,membre,admin)
         'reputation',
-        'Solde',
+        'solde',
         'statut', // (actif,quitte)
         'date_adhesion',
         'date_depart',

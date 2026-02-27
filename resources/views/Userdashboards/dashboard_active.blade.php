@@ -22,12 +22,10 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <span class="text-2xl mb-2 block">👥</span>
             <p class="text-slate-500 text-sm font-medium uppercase">Colocataires</p>
             <p class="text-2xl font-black text-slate-900">{{ $colocataires->count() }} membres</p>
         </div>
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <span class="text-2xl mb-2 block">💰</span>
             <p class="text-slate-500 text-sm font-medium uppercase">Dépenses du mois</p>
             <p class="text-2xl font-black text-slate-900">0.00 €</p>
         </div>

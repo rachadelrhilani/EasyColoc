@@ -21,6 +21,7 @@ class OwnerController extends Controller
         return view('owner.dashboard')
             ->with('colocation', $colocation)
             ->with('membres', $colocation->membres)
+            ->with('membre', $user)
             ->with('depenses', $colocation->depenses)
             ->with('totalMontant', $colocation->depenses->sum('montant'));
     }

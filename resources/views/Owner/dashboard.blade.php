@@ -8,8 +8,8 @@
             <p class="text-3xl font-bold text-slate-800">{{ $membres->count() }}</p>
         </div>
         <div class="bg-indigo-600 p-6 rounded-2xl shadow-lg text-white">
-            <p class="text-sm text-indigo-100 font-medium">Code Invitation</p>
-            <p class="text-2xl font-mono font-bold uppercase">{{ $colocation->code ?? 'N/A' }}</p>
+            <p class="text-sm text-indigo-100 font-medium">Votre Solde</p>
+            <p class="text-2xl font-mono font-bold uppercase">{{ $membre->solde }}</p>
         </div>
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
             <p class="text-sm text-slate-500 font-medium">Budget Total</p>
@@ -36,7 +36,7 @@
                         </div>
                     </div>
                     <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded">
-                        Rep: {{ $membre->reputation ?? 0 }}
+                        Rep: {{ $membre->reputation }}
                     </span>
                 </div>
                 @endforeach
