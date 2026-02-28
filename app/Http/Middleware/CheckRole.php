@@ -39,7 +39,6 @@ class CheckRole
         }
 
         if ($user->role === 'member') {
-            // Si on n'est pas déjà sur le dashboard member, on y va
             if (!$request->routeIs('dashboard')) {
                 return redirect()->route('dashboard')->with('error', 'Accès refusé à cette zone.');
             }

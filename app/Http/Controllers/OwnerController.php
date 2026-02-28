@@ -75,36 +75,5 @@ class OwnerController extends Controller
 
         return view('owner.membres', compact('membresActuels', 'utilisateursDisponibles'));
     }
-    
-    public function annulerColocation()
-    {
-        $owner = auth()->user();
 
-        if ($owner->role !== 'owner' || !$owner->colocation_id) {
-            return back()->with('error', 'Action réservée au propriétaire de la colocation.');
-        }
-
-        $members = \App\Models\User::where('colocation_id', $owner->colocation_id)->get();
-
-        foreach ($members as $user) {
-
-            $user->reputation += ($user->solde < 0) ? -1 : 1;
-
-            $user->update([
-                'role' => 'membre', 
-                'colocation_id' => null,
-                'statut' => 'quitte',
-                'solde' => 0,
-                'date_depart' => now(),
-            ]);
-        }
-
-
-        $coloc = Colocation::find($owner->colocation_id);
-        if ($coloc) {
-            $coloc->delete();
-        }
-
-        return redirect()->route('dashboard')->with('message', 'La colocation a été annulée. Les réputations ont été mises à jour.');
-    }
 }

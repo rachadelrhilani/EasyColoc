@@ -52,7 +52,7 @@ Route::middleware(['auth','role:owner'])->group(function () {
 
    Route::get('/categories', [OwnerController::class, 'indexCategories'])->name('categories.index');
    Route::post('/categories', [OwnerController::class, 'storeCategorie'])->name('categories.store');
-   Route::post('/colocation/annuler', [OwnerController::class, 'annulerColocation'])->name('profile.annuler');
+   Route::post('/colocation/annuler', [ColocationController::class, 'annulerColocation'])->name('profile.annuler');
 });
 
 
