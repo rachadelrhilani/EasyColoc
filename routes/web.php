@@ -54,6 +54,9 @@ Route::middleware(['auth','role:owner'])->group(function () {
    Route::post('/categories', [OwnerController::class, 'storeCategorie'])->name('categories.store');
    Route::post('/colocation/annuler', [ColocationController::class, 'annulerColocation'])->name('profile.annuler');
    Route::post('/membres/{membre}/retirer', [MemberController::class, 'retirerMembre'])->name('owner.retirer.membre');
+
+   Route::get('/gestion-coloc', [ColocationController::class, 'edit'])->name('owner.coloc.edit');
+    Route::patch('/gestion-coloc', [ColocationController::class, 'update'])->name('owner.coloc.update');
 });
 
 
