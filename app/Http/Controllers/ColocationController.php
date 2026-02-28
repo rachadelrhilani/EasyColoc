@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Colocation;
+use App\Models\User;
 use Illuminate\Container\Attributes\Auth as AttributesAuth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -43,7 +44,7 @@ class ColocationController extends Controller
             return back()->with('error', 'Action réservée au propriétaire de la colocation.');
         }
 
-        $members = \App\Models\User::where('colocation_id', $owner->colocation_id)->get();
+        $members = User::where('colocation_id', $owner->colocation_id)->get();
 
         foreach ($members as $user) {
 
@@ -65,5 +66,25 @@ class ColocationController extends Controller
         }
 
         return redirect()->route('dashboard')->with('message', 'La colocation a été annulée. Les réputations ont été mises à jour.');
+    }
+    public function edit()
+    {
+        $colocation = auth()->user()->colocation;
+
+        if (!$colocation || auth()->user()->role !== 'owner') {
+            return redirect()->route('dashboard')->with('error', 'Accès réservé au propriétaire.');
+        }
+
+        return view('owner.colocation.edit', compact('colocation'));
+    }
+
+    public function update(Request $request)
+    {
+        $request->validate(['nom' => 'required|string|max:255']);
+        
+        $colocation = auth()->user()->colocation;
+        $colocation->update(['nom' => $request->nom]);
+
+        return back()->with('message', 'Informations de la colocation mises à jour.');
     }
 }

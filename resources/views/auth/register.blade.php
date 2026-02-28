@@ -49,7 +49,7 @@
 
         <div class="mt-8 text-center text-sm text-slate-600">
             Déjà membre ? 
-            <a href="{{ route('auth.login') }}" class="text-indigo-600 font-semibold hover:underline">Se connecter</a>
+            <a href="{{ route('login') }}" class="text-indigo-600 font-semibold hover:underline">Se connecter</a>
         </div>
     </div>
 </div>
