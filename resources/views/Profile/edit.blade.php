@@ -97,6 +97,27 @@
                 </div>
             </div>
             @endif
+            @if($user->role === 'owner' && $user->colocation_id)
+            <div class="mt-12 pt-8 border-t border-slate-200">
+                <h3 class="text-lg font-bold text-slate-800 mb-1">Annuler la colocation</h3>
+                <p class="text-sm text-slate-500 mb-6">Mettra fin à la colocation pour tous les participants.</p>
+
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-xl border border-slate-200 bg-white">
+                    <div class="flex-1">
+                        <p class="text-xs text-slate-600 italic">
+                            Note : La réputation de chaque membre (vous inclus) sera ajustée selon son solde actuel.
+                        </p>
+                    </div>
+
+                    <form action="{{ route('profile.annuler') }}" method="POST" onsubmit="return confirm('Supprimer la colocation et mettre à jour les réputations ?');">
+                        @csrf
+                        <button type="submit" class="text-sm font-bold text-amber-600 hover:text-white hover:bg-amber-600 border border-amber-600 px-4 py-2 rounded-lg transition duration-200">
+                            Annuler maintenant
+                        </button>
+                    </form>
+                </div>
+            </div>
+            @endif
         </div>
     </div>
 </div>
