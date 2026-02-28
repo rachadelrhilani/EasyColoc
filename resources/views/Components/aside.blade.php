@@ -65,15 +65,24 @@
     @endif
 
     <div class="p-4 border-t">
-        <div class="flex items-center space-x-3 mb-4 p-2">
-            <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold uppercase">
+        <a href="{{ route('profile.edit') }}" class="flex items-center space-x-3 mb-4 p-2 rounded-xl hover:bg-slate-100 transition duration-200 group">
+            <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold uppercase group-hover:bg-indigo-200 transition">
                 {{ substr(Auth::user()->nom, 0, 1) }}
             </div>
             <div class="flex-1 overflow-hidden">
-                <p class="text-sm font-bold truncate">{{ Auth::user()->nom }}</p>
-                <p class="text-xs text-slate-500 truncate">{{ Auth::user()->email }}</p>
+                <p class="text-sm font-bold truncate text-slate-700 group-hover:text-indigo-600 transition">
+                    {{ Auth::user()->nom }}
+                </p>
+                <p class="text-xs text-slate-500 truncate">
+                    {{ Auth::user()->email }}
+                </p>
             </div>
-        </div>
+            <div class="text-slate-300 group-hover:text-slate-400">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+            </div>
+        </a>
         <form action="{{ route('logout') }}" method="POST">
             @csrf
             <button class="w-full flex items-center justify-center space-x-2 p-2 bg-slate-100 hover:bg-red-50 hover:text-red-600 rounded-lg text-sm font-semibold transition">
