@@ -88,7 +88,7 @@
                         </p>
                     </div>
 
-                    <form action="{{ route('profile.quitter') }}" method="POST" onsubmit="return confirm('Confirmer votre départ ?');">
+                    <form action="{{ route('profile.quitter') }}" method="POST">
                         @csrf
                         <button type="submit" class="text-sm font-bold text-red-600 hover:text-white hover:bg-red-600 border border-red-600 px-4 py-2 rounded-lg transition duration-200">
                             Quitter maintenant
