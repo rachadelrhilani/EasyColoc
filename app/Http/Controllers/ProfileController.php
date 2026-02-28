@@ -35,4 +35,28 @@ class ProfileController extends Controller
 
         return back()->with('message', 'Profil mis à jour avec succès !');
     }
+    public function quitterColocation(){
+    $user = auth()->user();
+
+    if (!$user->colocation_id || $user->role !== 'membre') {
+        return back()->with('error', "Seuls les membres d'une colocation peuvent effectuer cette action.");
+    };
+
+    if ($user->solde < 0) {
+        $user->reputation -= 1;
+        $message = "Vous avez quitté la colocation. Attention, votre solde était négatif, votre réputation a baissé.";
+    } else {
+        $user->reputation += 1;
+        $message = "Félicitations ! Vous avez quitté la colocation en règle, votre réputation a augmenté.";
+    }
+
+    $user->update([
+        'statut' => 'quitte',
+        'colocation_id' => null,
+        'date_depart' => now(),
+        'solde' => 0, 
+    ]);
+
+    return redirect()->route('dashboard')->with('message', $message);
+}
 }

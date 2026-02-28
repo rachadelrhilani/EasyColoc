@@ -40,6 +40,7 @@ Route::middleware(['auth','role:member'])->group(function () {
         ->name('invitation.reponse'); 
     Route::post('/invitation/decider', [InvitationController::class, 'decider'])
         ->name('invitation.decider');
+    Route::post('/colocation/quitter', [ProfileController::class, 'quitterColocation'])->name('profile.quitter');
 });
 
 

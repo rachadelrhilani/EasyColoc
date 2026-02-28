@@ -29,25 +29,6 @@
                 </button>
             </form>
         </div>
-
-        <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-8 hover:shadow-xl transition-all duration-300 group">
-            <div class="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
-            </div>
-            <h3 class="text-2xl font-bold text-slate-800 mb-3">Rejoindre une coloc</h3>
-            <p class="text-slate-500 mb-8">Utilisez le code d'invitation que votre colocataire vous a envoyé.</p>
-            
-            <form action="#" method="POST">
-                @csrf
-                <div class="mb-4">
-                    <input type="text" name="code" placeholder="Code (ex: ABC-123)" 
-                        class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none transition-all uppercase" required>
-                </div>
-                <button type="submit" class="w-full bg-emerald-600 text-white font-bold py-3 rounded-xl hover:bg-emerald-700 transition shadow-lg shadow-emerald-100">
-                    Valider le code
-                </button>
-            </form>
-        </div>
     </div>
 </div>
 @endsection

@@ -5,7 +5,7 @@
     <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
             <h2 class="text-3xl font-extrabold text-slate-800">
-                🏠 {{ $colocation->nom }}
+                {{ $colocation->nom }}
             </h2>
             <p class="text-slate-500 mt-1">Heureux de vous revoir, <span class="font-semibold text-indigo-600">{{ auth()->user()->nom }}</span> !</p>
         </div>
@@ -82,10 +82,7 @@
 
                 <div class="mt-8 pt-6 border-t border-slate-50 grid grid-cols-2 gap-4">
                     <button class="flex items-center justify-center gap-2 bg-slate-900 text-white p-4 rounded-2xl font-bold hover:bg-slate-800 transition shadow-lg shadow-slate-200">
-                        <span>➕</span> Dépense
-                    </button>
-                    <button class="flex items-center justify-center gap-2 bg-white border border-slate-200 text-slate-700 p-4 rounded-2xl font-bold hover:bg-slate-50 transition">
-                        <span>🗒️</span> Note
+                        Dépense
                     </button>
                 </div>
             </div>
