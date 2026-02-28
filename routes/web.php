@@ -56,6 +56,6 @@ Route::middleware(['auth','role:owner'])->group(function () {
 
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'statsdashboard'])->name('dashboard');
+    Route::get('/dashboard/admin', [AdminController::class, 'statsdashboard'])->name('dashboard');
     Route::post('/users/{user}/ban', [AdminController::class, 'toggleBan'])->name('admin.users.ban');
 });
