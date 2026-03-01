@@ -46,24 +46,24 @@ class InvitationController extends Controller
             'colocation_id'   => $owner->colocation_id,
         ]);
 
-        
+
         // genere Url
         $urlAction = URL::temporarySignedRoute(
-            'invitation.reponse', 
-            now()->addDays(7), 
+            'invitation.reponse',
+            now()->addDays(7),
             ['token' => $invitation->token]
         );
 
         // envoye l'invitation
         $envoi = MailService::envoyerInvitation(
-            $invitation->email, 
-            $urlAction, 
+            $invitation->email,
+            $urlAction,
             $owner->colocation->nom
         );
 
         if ($envoi) {
             return back()->with('message', "L'invitation a été envoyée avec succès à {$userAInviter->nom} !");
-        } 
+        }
 
         // En cas d'échec de l'envoi, on supprime l'invitation créée pour permettre de réessayer
         $invitation->delete();
@@ -73,7 +73,7 @@ class InvitationController extends Controller
     {
         $invitation = Invitation::with('colocation')->where('token', $token)->first();
 
-       
+
         if (!$invitation) {
             abort(404, "Invitation introuvable.");
         }
@@ -83,7 +83,7 @@ class InvitationController extends Controller
             return redirect()->route('login')->with('error', 'Cette invitation a déjà été traitée.');
         }
 
-        // verifier
+        // verifier l'expiration
         if (now()->gt($invitation->date_expiration)) {
             $invitation->update(['statut' => 'expire']);
             return redirect()->route('login')->with('error', 'Cette invitation a expiré.');
@@ -108,11 +108,16 @@ class InvitationController extends Controller
         }
 
         if ($request->choix === 'accepter') {
-            $user->update([
+            $updateData = [
                 'colocation_id' => $invitation->colocation_id,
-                'role'          => 'membre',
                 'date_adhesion' => now()
-            ]);
+            ];
+
+            if ($user->role !== 'admin') {
+                $updateData['role'] = 'membre';
+            }
+
+            $user->update($updateData);
 
             $invitation->update(['statut' => 'acceptee']);
 

@@ -37,13 +37,18 @@ class MemberController extends Controller
             $membre->reputation += 1;
         }
 
-        $membre->update([
+        $updateData = [
             'colocation_id' => null,
-            'role' => 'membre',
             'statut' => 'quitte',
-            'solde' => 0, 
+            'solde' => 0,
             'date_depart' => now()
-        ]);
+        ];
+
+        if ($membre->role !== 'admin') {
+            $updateData['role'] = 'membre';
+        }
+
+        $membre->update($updateData);
 
         return back()->with('message', "Le membre a été retiré. Les dettes ont été transférées à votre solde.");
     }

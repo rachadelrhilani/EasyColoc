@@ -38,7 +38,6 @@ class OwnerController extends Controller
         $utilisateursDisponibles = collect();
         if ($search) {
             $utilisateursDisponibles = User::where('colocation_id', null)
-                ->where('role', '!=', 'admin')
                 ->where('nom', 'LIKE', "%{$search}%")
                 ->where('id', '!=', auth()->id())
                 ->limit(5)
