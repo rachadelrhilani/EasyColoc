@@ -25,8 +25,8 @@ class CheckRole
             return $next($request);
         }
         if ($user->role === 'admin') {
-        return $next($request);
-    }
+            return $next($request);
+        }
 
         if (in_array($user->role, $roles) && $user->est_actif) {
             return $next($request);

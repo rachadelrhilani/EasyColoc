@@ -13,12 +13,11 @@
         </div>
 
         @if(session('message'))
-            <div class="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-2xl font-bold shadow-sm">
-                {{ session('message') }}
-            </div>
+        <div class="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-2xl font-bold shadow-sm">
+            {{ session('message') }}
+        </div>
         @endif
 
-        {{-- Formulaire d'Update --}}
         <div class="bg-white p-8 rounded-[2rem] shadow-xl shadow-slate-200/50 border border-white mb-8">
             <form action="{{ route('owner.coloc.update') }}" method="POST">
                 @csrf
@@ -26,9 +25,16 @@
 
                 <div class="mb-6">
                     <label class="block text-sm font-bold text-slate-700 mb-2 ml-1">Nom de la colocation</label>
-                    <input type="text" name="nom" value="{{ old('nom', $colocation->nom) }}" 
-                           class="w-full px-4 py-3.5 bg-slate-50 border-2 border-slate-100 rounded-2xl text-slate-800 font-medium focus:bg-white focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 outline-none transition-all">
+                    <input type="text" name="nom" value="{{ old('nom', $colocation->nom) }}"
+                        class="w-full px-4 py-3.5 bg-slate-50 border-2 border-slate-100 rounded-2xl text-slate-800 font-medium focus:bg-white focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 outline-none transition-all">
                     @error('nom') <p class="text-red-500 text-xs font-bold mt-2 ml-1 italic">{{ $message }}</p> @enderror
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-sm font-bold text-slate-700 mb-2 ml-1">Description</label>
+                    <textarea name="description" rows="3"
+                        class="w-full px-4 py-3.5 bg-slate-50 border-2 border-slate-100 rounded-2xl text-slate-800 font-medium focus:bg-white focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 outline-none transition-all">{{ old('description', $colocation->description) }}</textarea>
+                    @error('description') <p class="text-red-500 text-xs font-bold mt-2 ml-1 italic">{{ $message }}</p> @enderror
                 </div>
 
                 <button type="submit" class="bg-amber-500 text-white px-8 py-3 rounded-xl font-black uppercase tracking-wider hover:bg-amber-600 transition shadow-lg shadow-amber-100">
@@ -37,7 +43,6 @@
             </form>
         </div>
 
-        {{-- Section Destruction (Réutilisation du bloc précédent) --}}
         <div class="mt-12 pt-8 border-t border-slate-200">
             <h3 class="text-lg font-bold text-slate-800 mb-1">Zone de danger</h3>
             <p class="text-sm text-slate-500 mb-6">Action irréversible impactant tous les membres.</p>
@@ -46,7 +51,7 @@
                 <p class="text-xs text-red-700 font-medium max-w-md">
                     En annulant la colocation, tous les membres seront expulsés et leurs réputations seront mises à jour selon leurs soldes.
                 </p>
-                
+
                 <form action="{{ route('profile.annuler') }}" method="POST" onsubmit="return confirm('Supprimer définitivement la colocation ?');">
                     @csrf
                     <button type="submit" class="text-xs font-bold text-red-600 hover:text-white hover:bg-red-600 border border-red-600 px-4 py-2 rounded-lg transition duration-200">

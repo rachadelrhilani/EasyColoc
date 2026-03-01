@@ -29,34 +29,45 @@ class ColocationController extends Controller
         $user = auth()->user();
 
         // lie avec la colocation 
-        $user->update([
+        $updateData = [
             'colocation_id' => $colocation->id,
-            'role' => 'owner'
-        ]);
+        ];
 
-        return redirect()->route('owner.dashboard')->with('message', 'Colocation cree avec succes !');
+
+        if ($user->role !== 'admin') {
+            $updateData['role'] = 'owner';
+        }
+
+        $user->update($updateData);
+
+
+        return redirect()->route('owner.dashboard')->with('message', 'Colocation créée avec succès !');
     }
     public function annulerColocation()
     {
         $owner = auth()->user();
 
-        if ($owner->role !== 'owner' || !$owner->colocation_id) {
+        if (!in_array($owner->role, ['owner', 'admin']) || !$owner->colocation_id) {
             return back()->with('error', 'Action réservée au propriétaire de la colocation.');
         }
 
         $members = User::where('colocation_id', $owner->colocation_id)->get();
 
         foreach ($members as $user) {
-
             $user->reputation += ($user->solde < 0) ? -1 : 1;
 
-            $user->update([
-                'role' => 'membre', 
+            $updateData = [
                 'colocation_id' => null,
                 'statut' => 'quitte',
                 'solde' => 0,
                 'date_depart' => now(),
-            ]);
+            ];
+
+            if ($user->role !== 'admin') {
+                $updateData['role'] = 'membre';
+            }
+
+            $user->update($updateData);
         }
 
 
@@ -71,7 +82,7 @@ class ColocationController extends Controller
     {
         $colocation = auth()->user()->colocation;
 
-        if (!$colocation || auth()->user()->role !== 'owner') {
+        if (!$colocation || !in_array(auth()->user()->role, ['owner', 'admin'])) {
             return redirect()->route('dashboard')->with('error', 'Accès réservé au propriétaire.');
         }
 
@@ -80,10 +91,17 @@ class ColocationController extends Controller
 
     public function update(Request $request)
     {
-        $request->validate(['nom' => 'required|string|max:255']);
-        
+        $request->validate([
+            'nom' => 'required|string|max:255',
+            'description' => 'nullable|string|max:500'
+        ]);
+
         $colocation = auth()->user()->colocation;
-        $colocation->update(['nom' => $request->nom]);
+
+        $colocation->update([
+            'nom' => $request->nom,
+            'description' => $request->description
+        ]);
 
         return back()->with('message', 'Informations de la colocation mises à jour.');
     }

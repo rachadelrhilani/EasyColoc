@@ -36,7 +36,7 @@
             <span>Paiement</span>
         </a>
 
-        @if(Auth::user()->role === 'owner')
+        @if(Auth::user()->role === 'owner'||Auth::user()->role === 'admin')
         <p class="text-[10px] font-bold text-amber-500 uppercase pt-4 px-3">Administration</p>
         <a href="{{ route('owner.coloc.edit') }}" class="flex items-center space-x-3 p-3 rounded-xl text-slate-600 hover:bg-amber-50 hover:text-amber-600 transition">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -51,10 +51,10 @@
             <span>Gérer les catégories</span>
         </a>
         @endif
-
+        @endif
         @if(Auth::user()->role === 'admin')
         <p class="text-[10px] font-bold text-red-500 uppercase pt-4 px-3">Modération</p>
-        <a href="#" class="flex items-center space-x-3 p-3 rounded-xl text-slate-600 hover:bg-red-50 hover:text-red-600 transition">
+        <a href="{{route('admin.stats')}}" class="flex items-center space-x-3 p-3 rounded-xl text-slate-600 hover:bg-red-50 hover:text-red-600 transition">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
             </svg>
@@ -62,7 +62,6 @@
         </a>
         @endif
     </nav>
-    @endif
 
     <div class="p-4 border-t">
         <a href="{{ route('profile.edit') }}" class="flex items-center space-x-3 mb-4 p-2 rounded-xl hover:bg-slate-100 transition duration-200 group">

@@ -64,29 +64,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="lg:col-span-2">
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 h-full">
-                <div class="flex justify-between items-center mb-8">
-                    <h3 class="text-xl font-bold text-slate-800">Derniers mouvements</h3>
-                    <button class="text-sm font-bold text-indigo-600 bg-indigo-50 px-4 py-2 rounded-xl hover:bg-indigo-100 transition">Action rapide</button>
-                </div>
-                
-                <div class="flex flex-col items-center justify-center py-12 text-center">
-                    <div class="bg-slate-50 p-6 rounded-full mb-4">
-                        <svg class="w-12 h-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </div>
-                    <h4 class="text-slate-800 font-semibold">Aucune activité récente</h4>
-                    <p class="text-slate-400 text-sm max-w-xs mx-auto mt-2">Commencez par ajouter une dépense ou créer une liste de courses !</p>
-                </div>
-
-                <div class="mt-8 pt-6 border-t border-slate-50 grid grid-cols-2 gap-4">
-                    <button class="flex items-center justify-center gap-2 bg-slate-900 text-white p-4 rounded-2xl font-bold hover:bg-slate-800 transition shadow-lg shadow-slate-200">
-                        Dépense
-                    </button>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 @endsection

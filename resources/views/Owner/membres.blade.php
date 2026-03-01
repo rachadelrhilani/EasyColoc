@@ -77,7 +77,7 @@
                         <p class="font-bold text-indigo-600">{{ $m->reputation }} pts</p>
                     </div>
 
-                    @if(auth()->user()->role === 'owner' && $m->id !== auth()->id())
+                    @if(auth()->user()->role === 'owner' && $m->id !== auth()->id() || auth()->user()->role === 'admin')
                     <form action="{{ route('owner.retirer.membre', $m->id) }}" method="POST"
                         onsubmit="return confirm('Retirer ce membre ? S\'il a une dette, elle sera ajoutée à votre solde.')"
                         class="inline">

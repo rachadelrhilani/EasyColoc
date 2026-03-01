@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\ColocationController;
 use App\Http\Controllers\DepenseController;
 use App\Http\Controllers\InvitationController;
@@ -50,8 +51,11 @@ Route::middleware(['auth','role:owner'])->group(function () {
    Route::get('/owner/membres', [OwnerController::class, 'membres'])->name('owner.membres');
    Route::post('/owner/inviter', [InvitationController::class, 'envoyer'])->name('owner.inviter');
 
-   Route::get('/categories', [OwnerController::class, 'indexCategories'])->name('categories.index');
-   Route::post('/categories', [OwnerController::class, 'storeCategorie'])->name('categories.store');
+   Route::get('/categories', [CategorieController::class, 'indexCategories'])->name('categories.index');
+   Route::post('/categories', [CategorieController::class, 'storeCategorie'])->name('categories.store');
+   Route::patch('/categories/{category}', [CategorieController::class, 'update'])->name('categories.update');
+Route::delete('/categories/{category}', [CategorieController::class, 'destroy'])->name('categories.destroy');
+
    Route::post('/colocation/annuler', [ColocationController::class, 'annulerColocation'])->name('profile.annuler');
    Route::post('/membres/{membre}/retirer', [MemberController::class, 'retirerMembre'])->name('owner.retirer.membre');
 
@@ -61,6 +65,6 @@ Route::middleware(['auth','role:owner'])->group(function () {
 
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/dashboard/admin', [AdminController::class, 'statsdashboard'])->name('dashboard');
+    Route::get('/dashboard/admin', [AdminController::class, 'statsdashboard'])->name('admin.stats');
     Route::post('/users/{user}/ban', [AdminController::class, 'toggleBan'])->name('admin.users.ban');
 });

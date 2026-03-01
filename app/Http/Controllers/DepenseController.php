@@ -39,7 +39,6 @@ class DepenseController extends Controller
         $userPayeur = auth()->user();
         $collocation = $userPayeur->colocation;
         $membres = $collocation->membres;
-        $nombreMembres = $membres->count();
 
         // exclus le membre qui a depense
         $autresMembres = $membres->where('id', '!==', $userPayeur->id);
